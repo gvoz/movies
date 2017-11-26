@@ -1,5 +1,5 @@
 filename = "movies.txt"
-keys = [:link, :name, :year, :county, :date, :genres, :duration, :rating, :director]
+keys = %i[link name year county date genres duration rating director]
 
 def puts_movies(array)
   array.each{ |a| puts "#{a[:name]} (#{a[:date]}; #{a[:genres]}) - #{a[:duration]}" }

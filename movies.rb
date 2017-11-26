@@ -1,5 +1,5 @@
 filename = "movies.txt"
-movies = []
+keys = [:link, :name, :year, :county, :date, :genres, :duration, :rating, :director]
 
 def puts_movies(array)
   array.each{ |a| puts "#{a[:name]} (#{a[:date]}; #{a[:genres]}) - #{a[:duration]}" }
@@ -12,34 +12,21 @@ elsif ARGV.size > 1
   return
 end
 
-if File.exist?(filename)
-  File.open(filename, "r").each do |file|
-    array = file.split('|')
-    movies << {
-      link: array[0],
-      name: array[1],
-      year: array[2],
-      county: array[3],
-      date: array[4],
-      genres: array[5],
-      duration: array[6],
-      rating: array[7],
-      director: array[8],
-      stars: array[9]
-    }
-  end
-else
+unless File.exist?(filename)
   puts "Файл #{filename} не найден"
+  return
 end
 
+movies = File.open(filename, "r").map{ |file| keys.zip(file.split('|')).to_h }
+
 puts "5 самых длинных фильмов:"
-puts_movies(movies.sort_by{ |movie| movie[:duration].to_i}.reverse[0..4] )
+puts_movies(movies.sort_by{ |movie| movie[:duration].to_i}.first(5))
 
 puts "10 комедий (первые по дате выхода):"
-puts_movies(movies.select{ |movie| movie[:genres].include?('Comedy') }.sort_by{ |movie| movie[:date].to_i}[0..9] )
+puts_movies(movies.select{ |movie| movie[:genres].include?('Comedy') }.sort_by{ |movie| movie[:date].to_i}.first(10) )
 
 puts "список всех режиссёров по алфавиту"
-movies.uniq{ |movie| movie[:director] }.sort_by{ |movie| movie[:director].split.last }.each{ |movie| puts movie[:director] }
+movies.map{ |movie| movie[:director] }.uniq.sort_by{ |a| a.split.last }.each{ |a| puts a }
 
 puts "количество фильмов, снятых не в США:"
-puts movies.select{ |movie| movie[:county] != 'USA' }.size
+puts movies.count{ |movie| movie[:county] != 'USA' }

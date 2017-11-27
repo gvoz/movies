@@ -1,8 +1,11 @@
+require 'csv'
+require 'ostruct'
+
 filename = "movies.txt"
-keys = %i[link name year county date genres duration rating director]
+keys = %i[link name year county date genres duration rating director stars]
 
 def puts_movies(array)
-  array.each{ |a| puts "#{a[:name]} (#{a[:date]}; #{a[:genres]}) - #{a[:duration]}" }
+  array.each{ |a| puts "#{a.name} (#{a.date}; #{a.genres}) - #{a.duration}" }
 end
 
 if ARGV.size == 1
@@ -17,16 +20,20 @@ unless File.exist?(filename)
   return
 end
 
-movies = File.open(filename, "r").map{ |file| keys.zip(file.split('|')).to_h }
+movies = CSV.read(filename, col_sep: '|', headers: keys).map{ |row| OpenStruct.new(row.to_h) }
 
 puts "5 самых длинных фильмов:"
-puts_movies(movies.sort_by{ |movie| movie[:duration].to_i}.first(5))
+puts_movies(movies.sort_by{ |movie| movie.duration.to_i}.reverse.first(5))
 
 puts "10 комедий (первые по дате выхода):"
-puts_movies(movies.select{ |movie| movie[:genres].include?('Comedy') }.sort_by{ |movie| movie[:date].to_i}.first(10) )
+puts_movies(movies.select{ |movie| movie.genres.include?('Comedy') }.sort_by(&:date).first(10) )
 
 puts "список всех режиссёров по алфавиту"
-movies.map{ |movie| movie[:director] }.uniq.sort_by{ |a| a.split.last }.each{ |a| puts a }
+movies.map(&:director).uniq.sort_by{ |a| a.split.last }.each{ |a| puts a }
 
 puts "количество фильмов, снятых не в США:"
-puts movies.count{ |movie| movie[:county] != 'USA' }
+puts movies.count{ |movie| movie.county != 'USA' }
+
+puts "Статистика по месяцам:"
+movies.reject{ |movie| movie.date.size < 6}.map{ |movie| Date.strptime(movie.date, '%Y-%m').month }.sort.group_by(&:itself).each{ |k, v| puts "#{Date::MONTHNAMES[k]}: #{v.size}"}
+

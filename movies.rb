@@ -35,5 +35,5 @@ puts "количество фильмов, снятых не в США:"
 puts movies.count{ |movie| movie.county != 'USA' }
 
 puts "Статистика по месяцам:"
-movies.reject{ |movie| movie.date.size < 6}.map{ |movie| Date.strptime(movie.date, '%Y-%m').month }.sort.group_by{ |e| e }.each{ |k, v| puts "#{Date::MONTHNAMES[k]}: #{v.size}"}
+movies.reject{ |movie| movie.date.size < 6}.map{ |movie| Date.strptime(movie.date, '%Y-%m').month }.sort.group_by(&:itself).each{ |k, v| puts "#{Date::MONTHNAMES[k]}: #{v.size}"}
 

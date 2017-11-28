@@ -4,7 +4,6 @@ require_relative 'movie'
 
 class MovieCollection
   FIELDS = %i[link name year country date genre duration rating director actors]
-  attr_reader :genres
 
   def initialize filename
     read_file(filename)
@@ -12,32 +11,33 @@ class MovieCollection
 
   def read_file filename
     @list = CSV.read(filename, col_sep: '|', headers: FIELDS).map{ |row| Movie.new(self, row.to_h) }
-    @genres = @list.map(&:genre).flatten.uniq
   rescue
     puts "Файл #{filename} не найден"
   end
 
+  def genres
+    @genres ||= @list.flat_map(&:genre).uniq
+  end
+
   def all
-    @list.map{|m| m.to_s}
+    @list
   end
 
   def sort_by(field)
-    @list.sort_by(&field).map{|m| m.to_s}
+    @list.sort_by(&field)
   end
 
   def filter(params)
-    movies = @list
-    params.each do |key, value|
-      movies = movies.select{ |movie| movie.send(key).include?(value) }
+    params.reduce(@list) do |movies, (key, value)|
+      movies.select{ |movie| value === movie.send(key) || value === movie.send(key).to_s }
     end
-    movies.map{ |m| m.to_s }
   end
 
   def stats(field)
-    @list.map(&field).flatten.sort.group_by(&:itself).transform_values { |v| v.size }
+    @list.flat_map(&field).sort.group_by(&:itself).transform_values(&:size)
   end
 
   def inspect
-    "<#{self.class}: #{@list.first(5).map{|m| m.to_s}.join("; ")}>"
+    "<#{self.class}: #{@list.map{|m| m.to_s}.join("; ")}>"
   end
 end

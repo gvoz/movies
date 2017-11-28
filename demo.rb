@@ -10,20 +10,4 @@ end
 
 movies = MovieCollection.new(filename)
 
-puts 'Список фильмов'
-puts movies.all
-
-puts 'сортировка по дате'
-puts movies.sort_by(:date)
-
-puts 'Список комедий'
-puts movies.filter(genre: 'Comedy')
-
-puts 'Список итальянских комедий'
-puts movies.filter(genre: 'Comedy', country: 'Italy')
-
-puts 'Статистика режисеров'
-puts movies.stats(:director)
-
-puts 'Статистика актеров'
-puts movies.stats(:actors)
+puts movies.filter(year: 2001...2008, actors: /Bale/)

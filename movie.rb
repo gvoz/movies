@@ -6,7 +6,10 @@ class Movie
     args.each do |k,v|
       instance_variable_set("@#{k}", v ) unless v.nil?
     end
+    correction_values
+  end
 
+  def correction_values
     @actors = @actors.split(',')
     @genre = @genre.split(',')
     @year = @year.to_i
@@ -24,11 +27,8 @@ class Movie
   end
 
   def has_genre?(g)
-    if @collection.genres.include?(g)
-      genre.include?(g)
-    else
-      raise "Такого жанра нет в коллекции фильмов"
-    end
+    raise "Такого жанра нет в коллекции фильмов" unless @collection.genres.include?(g)
+    genre.include?(g)
   end
 
   def county?(c)

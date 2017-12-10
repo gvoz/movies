@@ -38,4 +38,12 @@ class Movie
   def to_s
     "#{@name} (#{@year}, #{@date.strftime('%d.%m.%Y')}, #{@country}, #{@genre.join(', ')}, #{@duration} min, #{@rating}). Director: #{@director}. Actors: #{@actors.join(', ')}"
   end
+
+  def match? key, value
+    if key == :genre
+      value.is_a?(Array) ? !(send(key) & value).empty? : send(key).include?(value)
+    else
+      value === send(key) || value === send(key).to_s
+    end
+  end
 end

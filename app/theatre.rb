@@ -6,20 +6,21 @@ class Theatre < Cinema
   }
 
   TIME_PERIODS = {
-    утром: Time.parse('10:00')..Time.parse('12:59'),
-    днем: Time.parse('13:00')..Time.parse('18:59'),
-    вечером: Time.parse('19:00')..Time.parse('23:59')
+    утром: Time.parse('10:00')..Time.parse('13:00'),
+    днем: Time.parse('13:00')..Time.parse('19:00'),
+    вечером: Time.parse('19:00')..Time.parse('24:00')
   }
 
   def show(time = nil)
-    start choice time.nil? ? @movies.all : schedule_film(time)
+    raise "Укажите желаемое время просмотра фильма" if time.nil?
+    start choice schedule_film(time)
   end
 
   def schedule_film time
-    period = TIME_PERIODS.select { |key, value| value === Time.parse(time) }.keys.first
+    period = TIME_PERIODS.detect { |key, value| value === Time.parse(time) }
     raise "Кинотеатр закрыт" if period.nil?
 
-    @movies.filter(SCHEDULE[period])
+    @movies.filter(SCHEDULE[period[0]])
   end
 
   def when? name
@@ -28,7 +29,7 @@ class Theatre < Cinema
     raise "Фильм не найден" if film.nil?
 
     periods = SCHEDULE.select do |_, condition|
-      @movies.filter(condition).include?(film)
+      film.match_all?(condition)
     end.keys
 
     if periods.empty?

@@ -14,11 +14,15 @@ describe Theatre do
     end
 
     it 'evening'do
-      expect { theatre.show('20:15') }.to output( /The Truman Show/).to_stdout
+      expect { theatre.show('20:15') }.to output(/The Truman Show/).to_stdout
     end
 
     it 'mot_work'do
       expect { theatre.show('05:15') }.to raise_error("Кинотеатр закрыт")
+    end
+
+    it 'without time'do
+      expect { theatre.show }.to raise_error("Укажите желаемое время просмотра фильма")
     end
   end
 

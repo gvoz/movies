@@ -39,13 +39,17 @@ class Movie
   end
 
   def match? key, value
-    raise "В описании фильма нет поля #{key}" unless self.instance_variables.include?(('@'+key.to_s).to_sym) || key == :period
+    raise "В описании фильма нет поля #{key}" unless self.respond_to?(key)
 
     if key == :genre
       value.is_a?(Array) ? !(send(key) & value).empty? : send(key).include?(value)
     else
       value === send(key) || value === send(key).to_s
     end
+  end
+
+  def match_all? condition
+    condition.inject(false) { |fit, (key, value)| fit || self.match?(key, value) }
   end
 
   def self.create params

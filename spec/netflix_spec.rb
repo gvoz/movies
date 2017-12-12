@@ -45,7 +45,7 @@ describe Netflix do
     end
 
     it 'not enough money' do
-      expect{netflix.show(period: :new)}.to raise_error('Нужно больше золота')
+      expect{netflix.show(period: :new)}.to raise_error('Баланс 4 доллара, невозможно показать фильм за 5')
     end
   end
 

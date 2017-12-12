@@ -9,7 +9,7 @@ class Netflix < Cinema
   def show params
     film = choice params.nil? ? @movies.all : @movies.filter(params)
     film_cost = cost(film)
-    raise 'Нужно больше золота' if film_cost > @balance
+    raise "Баланс #{@balance} доллара, невозможно показать фильм за #{film_cost}" if film_cost > @balance
     @balance -= film_cost
     start film
   end

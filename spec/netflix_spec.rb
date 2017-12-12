@@ -4,36 +4,36 @@ describe Netflix do
   let!(:movies) { MovieCollection.new('spec/data/movies.txt') }
   let(:netflix) { Netflix.new(movies) }
 
-  context '#show' do
+  describe '#show' do
     before { netflix.pay(10) }
 
-    subject(:ancient) { netflix.show(period: :ancient) }
-    it 'ancient' do
-      expect(ancient).to match /старый фильм/
-      expect(netflix.balance).to eq(9)
+    context 'when AncientMovie' do
+      subject { -> { netflix.show(period: :ancient) } }
+      it { is_expected.to output(/старый фильм/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(10).to(9) }
     end
 
-    subject(:classic) { netflix.show(period: :classic) }
-    it 'classic' do
-      expect(classic).to match /классический фильм/
-      expect(netflix.balance).to eq(8.5)
+    context 'when ClassicMovie' do
+      subject { -> { netflix.show(period: :classic) } }
+      it { is_expected.to output(/классический фильм/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(10).to(8.5) }
     end
 
-    subject(:modern) { netflix.show(period: :modern) }
-    it 'modern' do
-      expect(modern).to match /современное кино/
-      expect(netflix.balance).to eq(7)
+    context 'when ModernMovie' do
+      subject { -> { netflix.show(period: :modern) } }
+      it { is_expected.to output(/современное кино/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(10).to(7) }
     end
 
-    subject(:new_film) { netflix.show(period: :new) }
-    it 'new' do
-      expect(new_film).to match /новинка/
-      expect(netflix.balance).to eq(5)
+    context 'when NewMovie' do
+      subject { -> { netflix.show(period: :new) } }
+      it { is_expected.to output(/новинка/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(10).to(5) }
     end
 
-    it 'not found' do
-      expect{netflix.show(year: 2100)}.to raise_error("Нет подходящих фильмов для просмотра")
-      expect { raise 'test' }.to raise_error('test')
+    context 'when not found' do
+      subject { -> { netflix.show(year: 2100) } }
+      it { is_expected.to raise_error("Нет подходящих фильмов для просмотра") }
     end
   end
 

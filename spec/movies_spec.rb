@@ -2,26 +2,27 @@ require_relative '../movies'
 
 describe Movie do
   context '#to_s' do
-    let!(:movies) { MovieCollection.new('spec/data/movies.txt') }
+    let(:movies) { MovieCollection.new('spec/data/movies.txt') }
+    subject { movie.to_s }
 
-    it 'ancient'do
-      ancient = movies.filter(year: 1900...1945).first
-      expect(ancient.to_s).to eq("#{ancient.name} — старый фильм (#{ancient.year} год)")
+    context 'when AncientMovie' do
+      let(:movie) { movies.filter(year: 1900...1945).first }
+      it { is_expected.to eq("#{movie.name} — старый фильм (#{movie.year} год)") }
     end
 
-    it 'classic' do
-      classic = movies.filter(year: 1945...1968).first
-      expect(classic.to_s).to eq("#{classic.name} — классический фильм, режиссёр #{classic.director} (ещё #{movies.filter(director: classic.director).size} его фильмов в спике)")
+    context 'when ClassicMovie' do
+      let(:movie) { movies.filter(year: 1945...1968).first }
+      it { is_expected.to eq("#{movie.name} — классический фильм, режиссёр #{movie.director} (ещё #{movies.filter(director: movie.director).size} его фильмов в спике)") }
     end
 
-    it 'modern' do
-      modern = movies.filter(year: 1968...2000).first
-      expect(modern.to_s).to eq("#{modern.name} — современное кино: играют #{modern.actors.join(', ')}")
+    context 'when ModernMovie' do
+      let(:movie) { movies.filter(year: 1968...2000).first }
+      it { is_expected.to eq("#{movie.name} — современное кино: играют #{movie.actors.join(', ')}") }
     end
 
-    it 'new' do
-      new_film = movies.filter(year: 2000...2017).first
-      expect(new_film.to_s).to eq("#{new_film.name} — новинка, вышло #{DateTime.now.year - new_film.year} лет назад!")
+    context 'when NewMovie' do
+      let(:movie) { movies.filter(year: 2000...2017).first }
+      it { is_expected.to eq("#{movie.name} — новинка, вышло #{DateTime.now.year - movie.year} лет назад!") }
     end
   end
 end

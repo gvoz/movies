@@ -7,25 +7,10 @@ class MovieCollection
 
   def read_file filename
     @list = CSV.read(filename, col_sep: '|', headers: FIELDS).map do |row|
-      movie_type row.to_h
+      Movie.create(row.to_h.merge(collection: self))
     end
   rescue
     puts "Файл #{filename} не найден"
-  end
-
-  def movie_type movie
-    case movie[:year].to_i
-    when 1900...1945
-      AncientMovie.new(self, movie)
-    when 1945...1968
-      ClassicMovie.new(self, movie)
-    when 1968...2000
-      ModernMovie.new(self, movie)
-    when 2000...Date.today.year
-      NewMovie.new(self, movie)
-    else
-      Movie.new(self, movie)
-    end
   end
 
   def genres

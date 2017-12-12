@@ -1,8 +1,7 @@
 class Movie
-  attr_reader :link, :name, :year, :country, :date, :genre, :duration, :rating, :director, :actors
+  attr_reader :link, :name, :year, :country, :date, :genre, :duration, :rating, :director, :actors, :collection
 
-  def initialize collection, args
-    @collection = collection
+  def initialize args
     args.each do |k,v|
       instance_variable_set("@#{k}", v ) unless v.nil?
     end
@@ -40,10 +39,31 @@ class Movie
   end
 
   def match? key, value
+    raise "В описании фильма нет поля #{key}" unless self.instance_variables.include?(('@'+key.to_s).to_sym) || key == :period
+
     if key == :genre
       value.is_a?(Array) ? !(send(key) & value).empty? : send(key).include?(value)
     else
       value === send(key) || value === send(key).to_s
     end
+  end
+
+  def self.create params
+    case params[:year].to_i
+    when 1900...1945
+      AncientMovie.new(params) #.merge(period: :ancient))
+    when 1945...1968
+      ClassicMovie.new(params) #.merge(period: :classic))
+    when 1968...2000
+      ModernMovie.new(params) #.merge(period: :modern))
+    when 2000...Date.today.year
+      NewMovie.new(params) #.merge(period: :new))
+    else
+      self.new(params)
+    end
+  end
+
+  def period
+    self.class.name.split('Movie').first.downcase.to_sym
   end
 end

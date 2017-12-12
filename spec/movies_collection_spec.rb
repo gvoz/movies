@@ -1,8 +1,8 @@
 require_relative '../movies'
 
 describe MovieCollection do
-  context '#filter' do
-    let!(:movies) { MovieCollection.new('spec/data/movies_filter.txt') }
+  describe '#filter' do
+    let(:movies) { MovieCollection.new('spec/data/movies_filter.txt') }
 
     it 'name' do
       expect(movies.filter(name: 'Rocky').size).to eq(1)
@@ -30,6 +30,10 @@ describe MovieCollection do
 
     it 'actors' do
       expect(movies.filter(actors: /Sylvester Stallone/).size).to eq(1)
+    end
+
+    it 'unknown field' do
+      expect{movies.filter(budget: 1000)}.to raise_error("В описании фильма нет поля budget")
     end
   end
 end

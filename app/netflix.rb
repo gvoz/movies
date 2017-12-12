@@ -7,7 +7,7 @@ class Netflix < Cinema
   end
 
   def show params
-    film = choice params.nil? ? @movies.all : filter(params)
+    film = choice params.nil? ? @movies.all : @movies.filter(params)
     film_cost = cost(film)
     raise 'Нужно больше золота' if film_cost > @balance
     @balance -= film_cost
@@ -20,19 +20,19 @@ class Netflix < Cinema
   end
 
   def how_much? name
-    cost filter(name: name).first
+    cost @movies.filter(name: name).first
   end
 
   def cost film
     raise "Фильм не найден" if film.nil?
-    case film.type
-    when 'ancient'
+    case film.period
+    when :ancient
       1
-    when 'classic'
+    when :classic
       1.5
-    when 'modern'
+    when :modern
       3
-    when 'new'
+    when :new
       5
     end
   end

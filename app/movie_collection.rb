@@ -1,7 +1,3 @@
-require 'csv'
-
-require_relative 'movie'
-
 class MovieCollection
   FIELDS = %i[link name year country date genre duration rating director actors]
 
@@ -10,7 +6,9 @@ class MovieCollection
   end
 
   def read_file filename
-    @list = CSV.read(filename, col_sep: '|', headers: FIELDS).map{ |row| Movie.new(self, row.to_h) }
+    @list = CSV.read(filename, col_sep: '|', headers: FIELDS).map do |row|
+      Movie.create(row.to_h.merge(collection: self))
+    end
   rescue
     puts "Файл #{filename} не найден"
   end
@@ -29,7 +27,7 @@ class MovieCollection
 
   def filter(params)
     params.reduce(@list) do |movies, (key, value)|
-      movies.select{ |movie| value === movie.send(key) || value === movie.send(key).to_s }
+      movies.select{ |movie| movie.match?(key, value) }
     end
   end
 

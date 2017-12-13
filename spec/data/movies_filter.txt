@@ -1,0 +1,12 @@
+http://imdb.com/title/tt0075148/?ref_=chttp_tt_217|Rocky|1976|USA|1976-12-03|Drama,Sport|119 min|8.1|John G. Avildsen|Sylvester Stallone,Talia Shire,Burt Young
+http://imdb.com/title/tt0072684/?ref_=chttp_tt_218|Barry Lyndon|1975|UK|1975-12-18|Adventure,Drama,History|184 min|8.1|Stanley Kubrick|Ryan O'Neal,Marisa Berenson,Patrick Magee
+http://imdb.com/title/tt0120382/?ref_=chttp_tt_219|The Truman Show|1998|USA|1998-06-05|Drama|103 min|8.1|Peter Weir|Jim Carrey,Ed Harris,Laura Linney
+http://imdb.com/title/tt0044706/?ref_=chttp_tt_220|High Noon|1952|USA|1952-07-30|Drama,Thriller,Western|85 min|8.1|Fred Zinnemann|Gary Cooper,Grace Kelly,Thomas Mitchell
+http://imdb.com/title/tt0072890/?ref_=chttp_tt_221|Dog Day Afternoon|1975|USA|1975-09-21|Crime,Drama|125 min|8.1|Sidney Lumet|Al Pacino,John Cazale,Penelope Allen
+http://imdb.com/title/tt1504320/?ref_=chttp_tt_222|The King's Speech|2010|UK|2010-12-25|Biography,Drama,History|118 min|8.1|Tom Hooper|Colin Firth,Geoffrey Rush,Helena Bonham Carter
+http://imdb.com/title/tt2084970/?ref_=chttp_tt_223|The Imitation Game|2014|UK|2014-12-25|Biography,Drama,Thriller|114 min|8.1|Morten Tyldum|Benedict Cumberbatch,Keira Knightley,Matthew Goode
+http://imdb.com/title/tt1220719/?ref_=chttp_tt_224|Ip Man|2008|Hong Kong|2008-12-12|Action,Biography,Drama|106 min|8.1|Wilson Yip|Donnie Yen,Simon Yam,Siu-Wong Fan
+http://imdb.com/title/tt0113247/?ref_=chttp_tt_225|La Haine|1995|France|1996-02-23|Crime,Drama|98 min|8.1|Mathieu Kassovitz|Vincent Cassel,Hubert Koundé,Saïd Taghmaoui
+http://imdb.com/title/tt0058461/?ref_=chttp_tt_226|A Fistful of Dollars|1964|Italy|1967-01-18|Action,Drama,Western|99 min|8.1|Sergio Leone|Clint Eastwood,Gian Maria Volonté,Marianne Koch
+http://imdb.com/title/tt0038787/?ref_=chttp_tt_227|Notorious|1946|USA|1946-09-06|Drama,Film-Noir,Romance|101 min|8.1|Alfred Hitchcock|Cary Grant,Ingrid Bergman,Claude Rains
+http://imdb.com/title/tt0325980/?ref_=chttp_tt_228|Pirates of the Caribbean: The Curse of the Black Pearl|2003|USA|2003-07-09|Action,Adventure,Fantasy|143 min|8.1|Gore Verbinski|Johnny Depp,Geoffrey Rush,Orlando Bloom

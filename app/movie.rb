@@ -49,7 +49,7 @@ class Movie
   end
 
   def match_all? condition
-    condition.inject(true) { |fit, (key, value)| fit && self.match?(key, value) }
+    condition.all? { |key, value| self.match?(key, value) }
   end
 
   def self.create params

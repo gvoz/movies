@@ -1,8 +1,8 @@
-require_relative '../movies'
+require_relative '../app/movies'
 
-describe Movie do
+describe Movies::Movie do
   context '#to_s' do
-    let(:movies) { MovieCollection.new('spec/data/movies.txt') }
+    let(:movies) { Movies::MovieCollection.new('spec/data/movies.txt') }
     subject { movie.to_s }
 
     context 'when AncientMovie' do

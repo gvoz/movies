@@ -1,12 +1,16 @@
 module Movies
   module TicketOffice
 
+    def money
+      @money ||= Money.new(0)
+    end
+
     def cash
-      (@money ||= Money.new(0)).format
+      money.format
     end
 
     def put_money cost
-      @money ||= Money.new(0)
+      money
       @money += Money.new(cost)
     end
 

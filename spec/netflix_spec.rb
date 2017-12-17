@@ -2,8 +2,14 @@ require_relative '../app/movies'
 Money.use_i18n = false
 
 describe Movies::Netflix do
-  let!(:movies) { Movies::MovieCollection.new('spec/data/movies.txt') }
+  let(:movies) { Movies::MovieCollection.new('spec/data/movies.txt') }
   let(:netflix) { Movies::Netflix.new(movies) }
+
+  context 'all netfflix one ticket office' do
+    let(:netflix2) { Movies::Netflix.new(movies) }
+    it { expect { netflix.pay(100) }.to change{ Movies::Netflix.cash }.from('$0.00').to('$100.00') }
+    it { expect { netflix2.pay(100) }.to change{ Movies::Netflix.cash }.from('$100.00').to('$200.00') }
+  end
 
   describe '#show' do
     before { netflix.pay(10) }
@@ -48,14 +54,6 @@ describe Movies::Netflix do
     it 'not enough money' do
       expect{netflix.show(period: :new)}.to raise_error("Баланс $4.00, невозможно показать фильм за $5.00")
     end
-  end
-
-  context 'ticket office' do
-    it { expect{ Movies::Netflix.take('Bank') }.to output(/Проведена инкассация/).to_stdout }
-    it { expect(Movies::Netflix.cash).to eq('$0.00') }
-    it { expect { netflix.pay(100) }.to change{ Movies::Netflix.cash }.from('$0.00').to('$100.00') }
-    it { expect{ Movies::Netflix.take('Any') }.to raise_error("Вызываем полицию") }
-    it { expect(Movies::Netflix.cash).to eq('$100.00') }
   end
 
   context '#how_much?' do

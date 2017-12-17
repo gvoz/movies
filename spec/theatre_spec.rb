@@ -49,20 +49,9 @@ describe Movies::Theatre do
     end
   end
 
-  describe 'ticket office' do
-    it 'cash' do
-      theatre.buy_ticket('20:15')
-
-      expect{ theatre.take('Any') }.to raise_error("Вызываем полицию")
-      expect(theatre.cash).to eq('$10.00')
-      expect{ theatre.take('Bank') }.to output(/Проведена инкассация/).to_stdout
-      expect(theatre.cash).to eq('$0.00')
-    end
-
-    context 'buy ticket' do
-      subject { -> { theatre.buy_ticket('20:15') } }
-      it { is_expected.to change{ theatre.cash }.from('$0.00').to('$10.00') }
-      it { is_expected.to output(/The Truman Show/).to_stdout }
-    end
+  context 'buy ticket' do
+    subject { -> { theatre.buy_ticket('20:15') } }
+    it { is_expected.to change{ theatre.cash }.from('$0.00').to('$10.00') }
+    it { is_expected.to output(/The Truman Show/).to_stdout }
   end
 end

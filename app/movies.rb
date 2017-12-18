@@ -1,0 +1,15 @@
+require 'csv'
+require 'time'
+require 'money'
+
+require_relative 'movies/movie'
+require_relative 'movies/ancient_movie'
+require_relative 'movies/classic_movie'
+require_relative 'movies/modern_movie'
+require_relative 'movies/new_movie'
+require_relative 'movies/movie_collection'
+
+require_relative 'movies/ticket_office'
+require_relative 'movies/cinema'
+require_relative 'movies/netflix'
+require_relative 'movies/theatre'

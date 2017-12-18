@@ -1,8 +1,8 @@
-require_relative '../movies'
+require_relative '../app/movies'
 
-describe MovieCollection do
+describe Movies::MovieCollection do
   describe '#filter' do
-    let(:movies) { MovieCollection.new('spec/data/movies_filter.txt') }
+    let(:movies) { Movies::MovieCollection.new('spec/data/movies_filter.txt') }
 
     it 'name' do
       expect(movies.filter(name: 'Rocky').size).to eq(1)

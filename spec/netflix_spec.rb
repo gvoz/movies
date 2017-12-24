@@ -74,7 +74,7 @@ describe Movies::Netflix do
     end
 
     it 'not found'do
-      expect{netflix.how_much?('Abracadabra')}.to raise_error("Фильм не найден")
+      expect{netflix.how_much?('Abracadabra')}.to raise_error('Фильм не найден')
     end
   end
 
@@ -107,6 +107,10 @@ describe Movies::Netflix do
       subject { -> { netflix.show(new_test: true) } }
       it { is_expected.to output(/современное кино/).to_stdout }
       it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+    end
+
+    it 'define_filter without from' do
+      expect { netflix.define_filter(:new_test, from: :test, arg: 1990) }.to raise_error('Фильтр test не найден')
     end
   end
 end

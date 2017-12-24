@@ -20,3 +20,4 @@ end
 netflix.define_filter(:new_test, from: :test, arg: 1990)
 netflix.show(test: 1980)
 netflix.show(new_test: true)
+netflix.show { |movie| movie.actors.include?('Linda Hamilton') && movie.genre.include?('Sci-Fi') }

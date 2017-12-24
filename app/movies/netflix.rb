@@ -13,13 +13,7 @@ module Movies
     def show(params = {}, &block)
       args = Hash process_filters(params)
       args[:block] = block if block_given?
-      film = choice args.nil? ? @movies.all : @movies.filter(args)
-      film_cost = Money.new(cost(film) * 100)
-      if film_cost > @balance
-        raise "Баланс #{@balance.format}, невозможно показать фильм за #{film_cost.format}"
-      end
-      @balance -= film_cost
-      start film
+      show_film(choice(args.nil? ? @movies.all : @movies.filter(args)))
     end
 
     def pay(money)
@@ -44,6 +38,7 @@ module Movies
 
     def define_filter(name, from: nil, arg: nil, &block)
       return @filters[name] = block if from.nil?
+      raise "Фильтр #{from} не найден" if @filters[from].nil?
       @filters[name] = ->(movie) { @filters[from].call(movie, arg) }
     end
 
@@ -58,7 +53,16 @@ module Movies
     end
 
     def process_filters(params)
-      params.each { |key, value| params[key] = convert_filter(key, value) if @filters.key?(key) }
+      Hash[params.map { |k, v| [k, @filters.key?(k) ? convert_filter(k, v) : v] }]
+    end
+
+    def show_film(film)
+      film_cost = Money.new(cost(film) * 100)
+      if film_cost > @balance
+        raise "Баланс #{@balance.format}, невозможно показать фильм за #{film_cost.format}"
+      end
+      @balance -= film_cost
+      start film
     end
   end
 end

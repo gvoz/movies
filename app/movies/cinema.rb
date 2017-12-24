@@ -5,8 +5,8 @@ module Movies
     end
 
     def start(movie)
-      text = "Now showing: #{movie} (#{Time.now.strftime('%H:%M')}"
-      puts text + " - #{(Time.now + movie.duration * 60).strftime('%H:%M')})"
+      puts "Now showing: #{movie} (#{Time.now.strftime('%H:%M')}" \
+           " - #{(Time.now + movie.duration * 60).strftime('%H:%M')})"
     end
 
     def choice(movies)

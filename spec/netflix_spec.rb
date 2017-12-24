@@ -48,11 +48,11 @@ describe Movies::Netflix do
     before { netflix.pay(4) }
 
     it 'enough money' do
-      expect{netflix.pay(10)}.to change{netflix.balance}.from(Money.new(400)).to(Money.new(1400))
+      expect { netflix.pay(10) }.to change{netflix.balance}.from(Money.new(400)).to(Money.new(1400))
     end
 
     it 'not enough money' do
-      expect{netflix.show(period: :new)}.to raise_error("Баланс $4.00, невозможно показать фильм за $5.00")
+      expect { netflix.show(period: :new) }.to raise_error("Баланс $4.00, невозможно показать фильм за $5.00")
     end
   end
 
@@ -74,7 +74,7 @@ describe Movies::Netflix do
     end
 
     it 'not found'do
-      expect{netflix.how_much?('Abracadabra')}.to raise_error('Фильм не найден')
+      expect { netflix.how_much?('Abracadabra') }.to raise_error('Фильм не найден')
     end
   end
 
@@ -84,21 +84,21 @@ describe Movies::Netflix do
     context 'given' do
       subject { -> { netflix.show  { |movie| movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > 1990 } } }
       it { is_expected.to output(/современное кино/).to_stdout }
-      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+      it { is_expected.to change { netflix.balance }.from(Money.new(1000)).to(Money.new(700)) }
     end
 
     context 'define_filter' do
       before { netflix.define_filter(:test)  { |movie| movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > 1990 } }
       subject { -> { netflix.show(test: true) } }
       it { is_expected.to output(/современное кино/).to_stdout }
-      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+      it { is_expected.to change { netflix.balance }.from(Money.new(1000)).to(Money.new(700)) }
     end
 
     context 'define_filter with params' do
       before { netflix.define_filter(:test)  { |movie, year| movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > year } }
       subject { -> { netflix.show(test: 1990) } }
       it { is_expected.to output(/современное кино/).to_stdout }
-      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+      it { is_expected.to change { netflix.balance }.from(Money.new(1000)).to(Money.new(700)) }
     end
 
     context 'new filter on define_filter' do
@@ -106,7 +106,7 @@ describe Movies::Netflix do
       before { netflix.define_filter(:new_test, from: :test, arg: 1990) }
       subject { -> { netflix.show(new_test: true) } }
       it { is_expected.to output(/современное кино/).to_stdout }
-      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+      it { is_expected.to change { netflix.balance }.from(Money.new(1000)).to(Money.new(700)) }
     end
 
     it 'define_filter without from' do

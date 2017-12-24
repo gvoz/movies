@@ -77,4 +77,36 @@ describe Movies::Netflix do
       expect{netflix.how_much?('Abracadabra')}.to raise_error("Фильм не найден")
     end
   end
+
+  describe 'block' do
+    before { netflix.pay(10) }
+
+    context 'given' do
+      subject { -> { netflix.show  { |movie| movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > 1990 } } }
+      it { is_expected.to output(/современное кино/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+    end
+
+    context 'define_filter' do
+      before { netflix.define_filter(:test)  { |movie| movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > 1990 } }
+      subject { -> { netflix.show(test: true) } }
+      it { is_expected.to output(/современное кино/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+    end
+
+    context 'define_filter with params' do
+      before { netflix.define_filter(:test)  { |movie, year| movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > year } }
+      subject { -> { netflix.show(test: 1990) } }
+      it { is_expected.to output(/современное кино/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+    end
+
+    context 'new filter on define_filter' do
+      before { netflix.define_filter(:test)  { |movie, year| movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > year } }
+      before { netflix.define_filter(:new_test, from: :test, arg: 1990) }
+      subject { -> { netflix.show(new_test: true) } }
+      it { is_expected.to output(/современное кино/).to_stdout }
+      it { is_expected.to change{netflix.balance}.from(Money.new(1000)).to(Money.new(700)) }
+    end
+  end
 end

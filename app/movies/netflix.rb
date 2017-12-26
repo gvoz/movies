@@ -11,11 +11,11 @@ module Movies
     end
 
     def show(**params, &block)
-      args = separation_filters(params)
-      args[0] << block if block_given?
+      custom, standard = params.partition { |name, _| @filters.key?(name) }
+      custom << block if block_given?
 
-      @movies.filter(args[1].to_h)
-             .yield_self { |ms| custom_filter(ms, args[0]) }
+      @movies.filter(standard.to_h)
+             .yield_self { |ms| custom_filter(ms, custom) }
              .yield_self { |ms| choice(ms) }
              .yield_self { |movie| check_balance(movie) }
     end
@@ -63,10 +63,6 @@ module Movies
       when false then ->(movie) { !@filters[key].call(movie) }
       else ->(movie) { @filters[key].call(movie, value) }
       end
-    end
-
-    def separation_filters(params)
-      params.partition { |k, _| @filters.key?(k) }
     end
 
     def check_balance(film)

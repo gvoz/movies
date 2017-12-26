@@ -1,0 +1,12 @@
+AllCops:
+  Exclude:
+    - 'spec/*'
+    - 'spec/**/*'
+
+Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 100
+Style/FormatStringToken:
+  Enabled: false

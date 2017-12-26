@@ -1,17 +1,17 @@
 module Movies
   class MovieCollection
     include Enumerable
-    FIELDS = %i[link name year country date genre duration rating director actors]
+    FIELDS = %i[link name year country date genre duration rating director actors].freeze
 
-    def initialize filename
+    def initialize(filename)
       read_file(filename)
     end
 
-    def read_file filename
+    def read_file(filename)
       @list = CSV.read(filename, col_sep: '|', headers: FIELDS).map do |row|
         Movie.create(row.to_h.merge(collection: self))
       end
-    rescue
+    rescue StandardError
       puts "Файл #{filename} не найден"
     end
 
@@ -29,7 +29,7 @@ module Movies
 
     def filter(params)
       params.reduce(@list) do |movies, (key, value)|
-        movies.select{ |movie| movie.match?(key, value) }
+        movies.select { |movie| movie.match?(key, value) }
       end
     end
 
@@ -38,7 +38,7 @@ module Movies
     end
 
     def inspect
-      "<#{self.class}: #{@list.map{|m| m.to_s}.join("; ")}>"
+      "<#{self.class}: #{@list.map(&:to_s).join('; ')}>"
     end
 
     def each(&block)

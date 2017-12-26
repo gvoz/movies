@@ -12,8 +12,12 @@ module Movies
 
     def show(**params, &block)
       args = separation_filters(params)
-      args[:custom] << block if block_given?
-      check_balance(choice(custom_filter(@movies.filter(args[:base]), args[:custom])))
+      args[0] << block if block_given?
+
+      @movies.filter(args[1].to_h)
+             .yield_self { |ms| custom_filter(ms, args[0]) }
+             .yield_self { |ms| choice(ms) }
+             .yield_self { |movie| check_balance(movie) }
     end
 
     def pay(money)
@@ -23,7 +27,9 @@ module Movies
     end
 
     def how_much?(name)
-      Money.new(cost(@movies.filter(name: name).first) * 100).format
+      @movies.filter(name: name).first
+             .yield_self { |movie| cost(movie) * 100 }
+             .yield_self { |mc| Money.new(mc).format }
     end
 
     def cost(film)
@@ -43,7 +49,8 @@ module Movies
     end
 
     def custom_filter(films, params)
-      params.reduce(films) do |movies, value|
+      params.reduce(films) do |movies, p|
+        value = params[0].is_a?(Array) ? convert_filter(p[0], p[1]) : p
         movies.select(&value)
       end
     end
@@ -59,9 +66,7 @@ module Movies
     end
 
     def separation_filters(params)
-      params.each_with_object(base: [], custom: []) do |(k, v), h|
-        @filters.key?(k) ? h[:custom] << convert_filter(k, v) : h[:base] << [k, v]
-      end
+      params.partition { |k, _| @filters.key?(k) }
     end
 
     def check_balance(film)

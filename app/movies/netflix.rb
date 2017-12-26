@@ -11,15 +11,9 @@ module Movies
     end
 
     def show(**params, &block)
-      args = process_filters(params)
-      args[:block] = block if block_given?
-      film = choice(@movies.filter(args))
-      film_cost = Money.new(cost(film) * 100)
-      if film_cost > @balance
-        raise "Баланс #{@balance.format}, невозможно показать фильм за #{film_cost.format}"
-      end
-      @balance -= film_cost
-      start film
+      args = separation_filters(params)
+      args[:custom] << block if block_given?
+      check_balance(choice(custom_filter(@movies.filter(args[:base]), args[:custom])))
     end
 
     def pay(money)
@@ -48,6 +42,12 @@ module Movies
       @filters[name] = ->(movie) { @filters[from].call(movie, arg) }
     end
 
+    def custom_filter(films, params)
+      params.reduce(films) do |movies, value|
+        movies.select(&value)
+      end
+    end
+
     private
 
     def convert_filter(key, value)
@@ -58,8 +58,19 @@ module Movies
       end
     end
 
-    def process_filters(params)
-      params.map { |k, v| [k, @filters.key?(k) ? convert_filter(k, v) : v] }.to_h
+    def separation_filters(params)
+      params.each_with_object(base: [], custom: []) do |(k, v), h|
+        @filters.key?(k) ? h[:custom] << convert_filter(k, v) : h[:base] << [k, v]
+      end
+    end
+
+    def check_balance(film)
+      film_cost = Money.new(cost(film) * 100)
+      if film_cost > @balance
+        raise "Баланс #{@balance.format}, невозможно показать фильм за #{film_cost.format}"
+      end
+      @balance -= film_cost
+      start film
     end
   end
 end

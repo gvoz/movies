@@ -15,9 +15,9 @@ movies = Movies::MovieCollection.new(filename)
 netflix = Movies::Netflix.new(movies)
 netflix.pay(10)
 netflix.define_filter(:test) do |movie, year|
-  movie.name.include?('Terminator') && movie.genre.include?('Action') && movie.year > year
+  movie.genre.include?('Action') && movie.year > year
 end
-netflix.show(test: 1980)
+netflix.show(name: /Terminator/, test: 1950)
 netflix.define_filter(:new_test, from: :test, arg: 1990)
 netflix.show(new_test: true)
 netflix.show { |movie| movie.actors.include?('Linda Hamilton') && movie.genre.include?('Sci-Fi') }

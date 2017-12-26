@@ -35,10 +35,5 @@ describe Movies::MovieCollection do
     it 'unknown field' do
       expect{movies.filter(budget: 1000)}.to raise_error("В описании фильма нет поля budget")
     end
-
-    it 'block' do
-      expect(movies.filter(block: proc { |movie| movie.actors.include?('Clint Eastwood') }).size).to eq(1)
-      expect(movies.filter(block: proc { |movie| movie.genre.include?('Action') && movie.year > 2000 }).size).to eq(2)
-    end
   end
 end

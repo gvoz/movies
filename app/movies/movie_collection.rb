@@ -29,11 +29,7 @@ module Movies
 
     def filter(params)
       params.reduce(@list) do |movies, (key, value)|
-        if value.is_a?(Proc)
-          movies.select(&value)
-        else
-          movies.select { |movie| movie.match?(key, value) }
-        end
+        movies.select { |movie| movie.match?(key, value) }
       end
     end
 

@@ -112,5 +112,10 @@ describe Movies::Netflix do
     it 'define_filter without from' do
       expect { netflix.define_filter(:new_test, from: :test, arg: 1990) }.to raise_error('Фильтр test не найден')
     end
+
+    it 'custom filter' do
+      expect(netflix.custom_filter(movies, [proc { |movie| movie.actors.include?('Clint Eastwood') }]).size).to eq(movies.filter(actors: /Clint Eastwood/).size)
+      expect(netflix.custom_filter(movies, [proc { |movie| movie.genre.include?('Action') && movie.year > 2000 }]).size).to eq(movies.filter(genre: 'Action', year: 2001..2017).size)
+    end
   end
 end

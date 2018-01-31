@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StringToArray < Virtus::Attribute
   def coerce(value)
     value.split(',')

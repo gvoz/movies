@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Movies
   class Period
     attr_reader :name, :filter, :cost, :halls, :interval

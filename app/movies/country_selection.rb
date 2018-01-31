@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Movies
   class CountrySelection
     def initialize(movies)

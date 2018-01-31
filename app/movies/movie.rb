@@ -1,27 +1,21 @@
 module Movies
   class Movie
-    attr_reader :link, :name, :year, :country, :date, :genre, :duration,
-                :rating, :director, :actors, :collection
+    include Virtus.model
 
-    def initialize(args)
-      args.each do |k, v|
-        instance_variable_set("@#{k}", v) unless v.nil?
-      end
-      correction_values
-    end
+    attribute :link, String
+    attribute :name, String
+    attribute :country, String
+    attribute :date, Date
+    attribute :genre, StringToArray
+    attribute :year, Integer
+    attribute :duration, Float
+    attribute :rating, Float
+    attribute :director, String
+    attribute :actors, StringToArray
+    attribute :collection, Object
 
-    def correction_values
-      @actors = @actors.split(',')
-      @genre = @genre.split(',')
-      @year = @year.to_i
-      @duration = @duration.to_i
-      @rating = @rating.to_f
-
-      @date = case @date.count('-')
-              when 2 then Date.strptime(@date, '%Y-%m-%d')
-              when 1 then Date.strptime(@date, '%Y-%m')
-              when 0 then Date.strptime(@date, '%Y')
-              end
+    def duration=(duration_str)
+      super duration_str.to_f
     end
 
     def genre?(g)
@@ -40,13 +34,14 @@ module Movies
     end
 
     def match?(key, value)
+      exclusion = false
+      if key.to_s.split('_').first == 'exclude'
+        exclusion = true
+        key = key.to_s.split('_').last.to_sym
+      end
       raise "В описании фильма нет поля #{key}" unless respond_to?(key)
 
-      if key == :genre
-        value.is_a?(Array) ? (send(key) & value).any? : send(key).include?(value)
-      else
-        value === send(key) || value === send(key).to_s
-      end
+      exclusion ^ match_result(key, value)
     end
 
     def match_all?(condition)
@@ -65,6 +60,16 @@ module Movies
 
     def period
       self.class.name.scan(/(\w+)Movie/).flatten.first.downcase.to_sym
+    end
+
+    private
+
+    def match_result(key, value)
+      if key == :genre
+        value.is_a?(Array) ? (send(key) & value).any? : send(key).include?(value)
+      else
+        value === send(key) || value === send(key).to_s
+      end
     end
   end
 end

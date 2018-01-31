@@ -3,23 +3,87 @@ Money.use_i18n = false
 
 describe Movies::Theatre do
   let!(:movies) { Movies::MovieCollection.new('spec/data/movies_theatre.txt') }
-  let(:theatre) { Movies::Theatre.new(movies) }
+  let(:theatre) do
+    Movies::Theatre.new(movies) do
+      hall :red, title: 'Красный зал', places: 100
+      hall :blue, title: 'Синий зал', places: 50
+      hall :green, title: 'Зелёный зал (deluxe)', places: 12
+
+      period '09:00'..'11:00' do
+        description 'Утренний сеанс'
+        filters genre: 'Comedy', year: 1900..1980
+        price 10
+        hall :red, :green
+      end
+
+      period '11:00'..'16:00' do
+        description 'Спецпоказ'
+        title 'The Wizard of Oz'
+        price 50
+        hall :blue
+      end
+
+      period '16:00'..'20:00' do
+        description 'Вечерний сеанс'
+        filters genre: ['Action', 'Drama'], year: 2007..Time.now.year
+        price 20
+        hall :red, :blue
+      end
+
+      period '19:00'..'22:00' do
+        description 'Вечерний сеанс для киноманов'
+        filters year: 1900..1990, exclude_country: 'USA'
+        price 30
+        hall :green
+      end
+    end
+  end
+
+  describe '#new' do
+    context 'when schedule is invalid' do
+      subject do
+        Movies::Theatre.new(movies) do
+          hall :blue, title: 'Синий зал', places: 50
+          hall :green, title: 'Зелёный зал (deluxe)', places: 12
+          period '16:00'..'20:00' do
+            description 'Вечерний сеанс'
+            filters genre: ['Action', 'Drama'], year: 2007..Time.now.year
+            price 20
+            hall :green, :blue
+          end
+
+          period '19:00'..'22:00' do
+            description 'Вечерний сеанс для киноманов'
+            filters year: 1900..1945, exclude_country: 'USA'
+            price 30
+            hall :green
+          end
+        end
+      end
+
+      it 'raises an error' do
+        expect { subject }.to raise_error(ArgumentError, /Расписание некорректно/)
+      end
+    end
+
+    context 'when schedule is valid' do
+      it "doesn't raise an error" do
+        expect { theatre }.to_not raise_error
+      end
+    end
+  end
 
   context '#show' do
-    it 'morning'do
-      expect { theatre.show('11:15') }.to output(/The Wizard of Oz/).to_stdout
+    it 'by film name' do
+      expect { theatre.show('11:30') }.to output(/The Wizard of Oz/).to_stdout
     end
 
-    it 'day'do
-      expect{ theatre.show('15:15') }.to output(/Pirates of the Caribbean: The Curse of the Black Pearl/).to_stdout
+    it 'by filter' do
+      expect { theatre.show('17:30') }.to output(/Inglourious Basterds/).to_stdout
     end
 
-    it 'evening'do
-      expect { theatre.show('20:15') }.to output(/The Truman Show/).to_stdout
-    end
-
-    it 'mot_work'do
-      expect { theatre.show('05:15') }.to raise_error("Кинотеатр закрыт")
+    it 'by exclude filter' do
+      expect { theatre.show('21:30') }.to output(/A Fistful of Dollars/).to_stdout
     end
 
     it 'without time'do
@@ -27,31 +91,18 @@ describe Movies::Theatre do
     end
   end
 
-  context '#when' do
-    it 'ancient'do
-      expect(theatre.when?('The Wizard of Oz')).to eq('утром')
-    end
-
-    it 'classic'do
-      expect(theatre.when?('Pirates of the Caribbean: The Curse of the Black Pearl')).to eq('днем')
-    end
-
-    it 'modern'do
-      expect(theatre.when?('The Truman Show')).to eq('вечером')
-    end
-
-    it 'not show'do
-      expect(theatre.when?('Notorious')).to eq('Данный фильм не показывают в нашем кинотеатре')
-    end
-
-    it 'not found'do
-      expect{theatre.when?('Abracadabra')}.to raise_error("Фильм не найден")
-    end
+  it '#when' do
+    expect(theatre.when?('City Lights')).to eq('Утренний сеанс: 09:00 - 11:00, Красный зал, Зелёный зал (deluxe)')
+    expect(theatre.when?('The Wizard of Oz')).to eq('Спецпоказ: 11:00 - 16:00, Синий зал')
+    expect(theatre.when?('Inglourious Basterds')).to eq('Вечерний сеанс: 16:00 - 20:00, Красный зал, Синий зал')
+    expect(theatre.when?('A Fistful of Dollars'))
+      .to eq('Вечерний сеанс для киноманов: 19:00 - 22:00, Зелёный зал (deluxe)')
+    expect(theatre.when?('The Terminator')).to eq('Данный фильм не показывают в нашем кинотеатре')
   end
 
   context 'buy ticket' do
     subject { -> { theatre.buy_ticket('20:15') } }
-    it { is_expected.to change{ theatre.cash }.from('$0.00').to('$10.00') }
-    it { is_expected.to output(/The Truman Show/).to_stdout }
+    it { is_expected.to change{ theatre.cash }.from('$0.00').to('$30.00') }
+    it { is_expected.to output(/Вы купили билет на A Fistful of Dollars в Зелёный зал/).to_stdout }
   end
 end

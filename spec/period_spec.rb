@@ -18,26 +18,19 @@ describe Movies::Period do
     end
   end
 
-  describe '#new' do
+  context '#new' do
     subject { period }
 
     it { is_expected.to have_attributes(filter: { genre: 'Comedy', year: 1990..2000 }) }
     it { is_expected.to have_attributes(cost: 1000) }
     it { is_expected.to have_attributes(halls: cinema.halls) }
+  end
 
-    context 'when hall is not found' do
-      subject do
-        described_class.new('09:00'..'11:00', cinema) do
-          description 'Утренний сеанс'
-          filters genre: 'Comedy', year: 1900..1980
-          price 10
-          hall :black
-        end
-      end
+  context '#hall' do
+    subject { period }
 
-      it 'raises an error' do
-        expect { subject }.to raise_error(ArgumentError, 'Зала black нет в кинотеатре')
-      end
+    it 'raises an error' do
+      expect { subject.send(:hall, :black) }.to raise_error(ArgumentError, 'Зала black нет в кинотеатре')
     end
   end
 

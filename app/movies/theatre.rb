@@ -79,12 +79,12 @@ module Movies
     def schedule_valid?
       return true if @periods.empty?
       @periods.combination(2).none? do |a, b|
-        !(a.interval & b.interval).nil? & (a.halls & b.halls).any?
+        !(a.interval & b.interval).nil? && (a.halls & b.halls).any?
       end
     end
 
     def selection(period)
-      @movies.filter(period.name.nil? ? period.filter : { name: period.name })
+      @movies.filter(period.name.nil? ? period.filter : { name: period.name } )
     end
   end
 end

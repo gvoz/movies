@@ -33,7 +33,7 @@ module Movies
 
     def hall(*names)
       @halls = names.map do |name|
-        @theatre.halls.select { |hall| hall.name == name }.first ||
+        @theatre.halls.detect { |hall| hall.name == name } ||
           raise(ArgumentError, "Зала #{name} нет в кинотеатре")
       end
     end

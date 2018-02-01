@@ -1,3 +1,4 @@
+require 'pry'
 require_relative '../app/movies'
 
 describe Movies::GenreSelection do
@@ -10,4 +11,7 @@ describe Movies::GenreSelection do
   it { is_expected.to respond_to(:comedy) }
   it { is_expected.to respond_to(:sci_fi) }
   it { is_expected.to_not respond_to(:opera) }
+
+  it { expect(subject.drama.size).to eql(movies.filter(genre: 'Drama').size) }
+  it { expect(subject.sci_fi.size).to eql(movies.filter(genre: 'Sci-Fi').size) }
 end

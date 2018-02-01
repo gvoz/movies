@@ -8,15 +8,11 @@ module Movies
     attribute :date, Date
     attribute :genre, StringToArray
     attribute :year, Integer
-    attribute :duration, Float
+    attribute :duration, Duration
     attribute :rating, Float
     attribute :director, String
     attribute :actors, StringToArray
     attribute :collection, Object
-
-    def duration=(duration_str)
-      super duration_str.to_f
-    end
 
     def genre?(g)
       raise 'Такого жанра нет в коллекции фильмов' unless @collection.genres.include?(g)
@@ -35,9 +31,9 @@ module Movies
 
     def match?(key, value)
       exclusion = false
-      if key.to_s.split('_').first == 'exclude'
+      if key.to_s =~ /^exclude_(.+)$/
         exclusion = true
-        key = key.to_s.split('_').last.to_sym
+        key = Regexp.last_match[1]
       end
       raise "В описании фильма нет поля #{key}" unless respond_to?(key)
 

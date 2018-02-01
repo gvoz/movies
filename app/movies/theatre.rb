@@ -84,7 +84,7 @@ module Movies
     end
 
     def selection(period)
-      @movies.filter(period.name.nil? ? period.filter : { name: period.name } )
+      @movies.filter(period.name.nil? ? period.filter : { name: period.name })
     end
   end
 end

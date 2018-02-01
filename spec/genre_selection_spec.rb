@@ -1,4 +1,3 @@
-require 'pry'
 require_relative '../app/movies'
 
 describe Movies::GenreSelection do

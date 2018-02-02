@@ -8,7 +8,7 @@ end
 
 class Duration < Virtus::Attribute
   def coerce(value)
-    raise 'Продолжительность фильма должна быть в минутах' unless value.to_s =~ /\d min$/
+    raise 'Продолжительность фильма должна быть в минутах' unless value.to_s =~ /^(\d+) min$/
     value.to_i
   end
 end

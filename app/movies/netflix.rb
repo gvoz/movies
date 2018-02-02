@@ -55,6 +55,14 @@ module Movies
       end
     end
 
+    def by_country
+      CountrySelection.new(@movies)
+    end
+
+    def by_genre
+      GenreSelection.new(@movies)
+    end
+
     private
 
     def convert_filter(key, value)

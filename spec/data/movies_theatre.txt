@@ -9,3 +9,5 @@ http://imdb.com/title/tt1220719/?ref_=chttp_tt_224|Ip Man|2008|Hong Kong|2008-12
 http://imdb.com/title/tt0113247/?ref_=chttp_tt_225|La Haine|1995|France|1996-02-23|Crime|98 min|8.1|Mathieu Kassovitz|Vincent Cassel,Hubert Koundé,Saïd Taghmaoui
 http://imdb.com/title/tt0058461/?ref_=chttp_tt_226|A Fistful of Dollars|1964|Italy|1967-01-18|Western|99 min|8.1|Sergio Leone|Clint Eastwood,Gian Maria Volonté,Marianne Koch
 http://imdb.com/title/tt0038787/?ref_=chttp_tt_227|Notorious|1946|USA|1946-09-06|Film-Noir,Romance|101 min|8.1|Alfred Hitchcock|Cary Grant,Ingrid Bergman,Claude Rains
+http://imdb.com/title/tt0361748/?ref_=chttp_tt_103|Inglourious Basterds|2009|USA|2009-08-21|Adventure,Drama,War|153 min|8.3|Quentin Tarantino|Brad Pitt,Diane Kruger,Eli Roth
+http://imdb.com/title/tt0021749/?ref_=chttp_tt_35|City Lights|1931|USA|1931-03-07|Comedy,Drama,Romance|87 min|8.6|Charles Chaplin|Charles Chaplin,Virginia Cherrill,Florence Lee

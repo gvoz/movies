@@ -118,4 +118,14 @@ describe Movies::Netflix do
       expect(netflix.custom_filter(movies, [proc { |movie| movie.genre.include?('Action') && movie.year > 2000 }]).size).to eq(movies.filter(genre: 'Action', year: 2001..2017).size)
     end
   end
+
+  context '#by_country' do
+    subject { netflix.by_country }
+    it { is_expected.to be_an_instance_of(Movies::CountrySelection) }
+  end
+
+  context '#by_genre' do
+    subject { netflix.by_genre }
+    it { is_expected.to be_an_instance_of(Movies::GenreSelection) }
+  end
 end

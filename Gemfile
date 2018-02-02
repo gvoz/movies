@@ -5,4 +5,5 @@ group :development, :test do
   gem 'pry', '~> 0.11.3'
   gem 'rspec', '~> 3.7'
   gem 'rubocop', '~> 0.52.0', require: false
+  gem 'virtus'
 end
